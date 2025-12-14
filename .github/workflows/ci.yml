@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential \
+            pkg-config \
+            libx11-dev \
+            libxft-dev \
+            libfreetype6-dev
+
+      - name: Build
+        run: |
+          gcc lmk.c -o lmk \
+            -Wall -Wextra -Werror \
+            $(pkg-config --cflags xft freetype2) \
+            $(pkg-config --libs xft freetype2) \
+            -lX11 -lpthread
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: lmk-linux-amd64
+          path: lmk
+
