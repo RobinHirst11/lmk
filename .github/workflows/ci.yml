@@ -22,13 +22,11 @@ jobs:
             libxft-dev \
             libfreetype6-dev
 
+      - name: Configure
+        run: cmake -B build
+
       - name: Build
-        run: |
-          gcc lmk.c -o lmk \
-            -Wall -Wextra -Werror \
-            $(pkg-config --cflags xft freetype2) \
-            $(pkg-config --libs xft freetype2) \
-            -lX11 -lpthread
+        run: cmake --build build
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
